@@ -8,7 +8,7 @@ const typeRouter = require('./typeRouter')
 
 router.use('/user', userRouter)
 router.use('/brand', brandRouter)
-router.use('/product', productRouter)
+router.use('/products', productRouter)
 router.use('/type', typeRouter)
 
 

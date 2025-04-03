@@ -1,5 +1,6 @@
 const express = require('express')
 const cors = require('cors')
+const fileUpload = require('express-fileupload')
 const router = require('./routes')
 const errorHandlerMiddleware = require('./middleware/errorHandlingMiddleware')
 
@@ -13,6 +14,8 @@ const models = require('./models/models')
 
 app.use(cors())
 app.use(express.json())
+app.use(fileUpload({}))
+
 app.use('/api', router)
 
 app.get('/', (req, res) => {

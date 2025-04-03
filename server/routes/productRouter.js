@@ -1,6 +1,6 @@
 const Router = require('express')
 const router = new Router()
-const producControllers = require('../controllers').producControllers
+const {producControllers} = require('../controllers')
 
 
 
