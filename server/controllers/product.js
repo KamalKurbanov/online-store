@@ -6,20 +6,38 @@ const ApiError = require('../error/errorHandlers')
 class ProductControllers {
 
     async getAll(req, res) {
-        const products = await Product.findAll()
+        const { brandId: brandIdQuery, productId: productIdQuery} = req.query
+
+        const products = await Product.findAll({ raw: true })
+
+
+        if(!brandIdQuery && productIdQuery) {
+            return res.json(products.filter(({ id }) => id === Number(productIdQuery)))    
+        }
+
+        if(brandIdQuery && !productIdQuery) {
+            return res.json(products.filter(({ brandId }) => brandId === Number(brandId)))    
+
+        }
+
+        if(brandIdQuery && productIdQuery) {
+        
+            return res.json(products.filter(
+                ({brandId, id}) => brandId === Number(brandIdQuery) && id === Number(productIdQuery)))    
+        }
 
         return res.json(products)
     }
 
     async create(req, res, next) {
         try {
-            const {id, name, price} = req.body
+            const {id, name, price, brandId} = req.body
             const {img} = req.files
             
             const fileName = uuid.v4() + '.jpg'
             img.mv(path.resolve(__dirname, '..', 'static', fileName))
 
-            const product = await Product.create({id, name, price, img: fileName})
+            const product = await Product.create({id, name, price, img: fileName, brandId})
             
             return res.json(product)
         } catch(e) {
