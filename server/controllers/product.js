@@ -1,4 +1,4 @@
-const {Product} = require('../models/models')
+const {Product, ProducInfo} = require('../models/models')
 const uuid =  require('uuid')
 const path = require('path')
 const ApiError = require('../error/errorHandlers')
@@ -8,36 +8,48 @@ class ProductControllers {
     async getAll(req, res) {
         const { brandId: brandIdQuery, productId: productIdQuery} = req.query
 
-        const products = await Product.findAll({ raw: true })
-
-
-        if(!brandIdQuery && productIdQuery) {
-            return res.json(products.filter(({ id }) => id === Number(productIdQuery)))    
-        }
+        let products
 
         if(brandIdQuery && !productIdQuery) {
-            return res.json(products.filter(({ brandId }) => brandId === Number(brandId)))    
+            //TODO проверить на валидность числового значения
+            products = await Product.findAll({ raw: true, where: { brandId: brandIdQuery }})
 
         }
 
         if(brandIdQuery && productIdQuery) {
-        
-            return res.json(products.filter(
-                ({brandId, id}) => brandId === Number(brandIdQuery) && id === Number(productIdQuery)))    
+            //TODO проверить на валидность числового значения
+            products = await Product.findAll({ raw: true, where: { brandId: brandIdQuery, id: productIdQuery }})
+        }
+
+        if(!brandIdQuery && !productIdQuery) {
+            //TODO проверить на валидность числового значения
+            products = await Product.findAll({ raw: true })
         }
 
         return res.json(products)
     }
 
     async create(req, res, next) {
+
         try {
-            const {id, name, price, brandId} = req.body
+            const {id, name, price, brandId, info} = req.body
             const {img} = req.files
             
             const fileName = uuid.v4() + '.jpg'
             img.mv(path.resolve(__dirname, '..', 'static', fileName))
-
             const product = await Product.create({id, name, price, img: fileName, brandId})
+
+            if(info) {
+                const deserializeInfo = JSON.parse(info)
+                console.log('we here!',deserializeInfo )
+
+                deserializeInfo.forEach(x => {
+                    if(x?.title && x?.description) {
+                        const { title, description } = x
+                        ProducInfo.create({ title, description, productId: id })
+                    }
+                })
+            }
             
             return res.json(product)
         } catch(e) {
@@ -47,10 +59,11 @@ class ProductControllers {
     }
 
     async getOne(req, res) {
-        const {id} = req.body
+        const {id} = req.params
 
         const product = await Product.findOne({
-            where: { id }
+            where: { id },
+            include: [{ model: ProducInfo, as: 'info' }]
         })
 
         return res.json(product)

@@ -62,7 +62,7 @@ Basket.belongsTo(User)
 User.hasMany(Rating)
 Rating.belongsTo(User)
 
-Product.hasOne(ProducInfo)
+Product.hasMany(ProducInfo, { as: 'info' })
 ProducInfo.belongsTo(Product)
 
 Brand.hasMany(Product, { foreignKey: 'brandId' })
