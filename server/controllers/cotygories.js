@@ -1,23 +1,29 @@
-const {Cotygories} = require('../models/models')
+const { Cotygories } = require('../models/models');
 
 class CotygoryiesControllers {
+  async getAll(req, res) {
+    const types = await Cotygories.findAll();
 
-    async getAll(req, res) {
-    
-        const types = await Cotygories.findAll()
+    return res.json(types);
+  }
 
-        return res.json(types)
-    }
-
-    async create(req, res) {
-        const {name} = req.body
-        
-        const type = await Cotygories.create({name})
-
-        return res.json(type)
-    }
-
-} 
+  async create(req, res) {
+    const { name } = req.body;
 
 
-module.exports = new CotygoryiesControllers()
+    const type = await Cotygories.create({ name });
+
+    return res.json(type);
+  }
+
+  async delete(req, res) {
+    const { name } = req.body
+    console.log('we here', name)
+    const cotygory = await Cotygories.findOne({ where: {name} })
+    await cotygory.destroy()
+
+    return res.json({ message: `${name} успешно удален`})
+  }
+}
+
+module.exports = new CotygoryiesControllers();

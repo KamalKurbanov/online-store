@@ -1,48 +1,64 @@
 const ApiError = require('../error/errorHandlers')
+const {User, Basket} = require('../models/models')
+const cryptoHash = require('bcrypt')
+const jwt = require('jsonwebtoken')
+
+const generateJwt = (id, email, role) => {
+    return jwt.sign({id, email, role}, process.env.SECRET_KEY, {expiresIn: '24h'})
+}
 
 class UserControllers {
 
-    async registration(req, res) {
-        const { login, password, email } = req.query
+    async registration(req, res, next) {
+        const { password, email, role } = req.body
 
-        if(!login) {
-            next(ApiError.badRequest('Отсутвует login'))
+        if(!password || !email) {
+            return next(ApiError.badRequest('Некорректны пароли или email'))
         }
 
-        if(!password) {
-            next(ApiError.badRequest('Отсутвует password'))
+        const candidate = await User.findOne({where: {email}})
+
+        if(candidate) {     
+            return next(ApiError.badRequest('Пользователь с таким email уже существует'))
         }
 
-        if(!email) {
-            next(ApiError.badRequest('Отсутвует email'))
-        }
+        const hashPassword = await cryptoHash.hash(password, 5)
+
+        const user = await User.create({ role, email, password: hashPassword })
+        await Basket.create({ userId: user.id })
+
+        const token = generateJwt(user.id, user.email, user.role)
+        
+        return res.json({token})
     }
 
     async login(req, res, next) {
-        const { login, password } = req.query
+        const { email, password } = req.body;
 
-        if(!login) {
-            next(ApiError.badRequest('Отсутвует login'))
+        const user = await User.findOne({ where: { email }})
+
+        if(!user) {
+            return next(ApiError.internal('Пользователь не найден'))
         }
 
-        if(!password) {
-            next(ApiError.badRequest('Отсутвует password'))
+        const comparePassword = cryptoHash.compareSync(password, user.password)
+
+        if(!comparePassword) {
+            return next(ApiError.internal('Пользователь указан неверный пароль'))
         }
+
+        const token = generateJwt(user.id, user.email, user.role)
+
+        return  res.json({token})
     }
 
 
+    // eslint-disable-next-line no-unused-vars
     async check(req, res, next) {
-        const { id } = req.query
-
-        if(!id) {
-            next(ApiError.badRequest('Отсутствует ID'))
-            return
-        }
-
-        res.json(id)
+        res.json({message: 'ok!'})
     }
 
-
+                                                                  
 } 
 
 

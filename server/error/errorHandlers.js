@@ -14,6 +14,7 @@ class ErrorHandler {
 
 
     static internal(message) {
+        console.log('we here', message)   
         return new ErrorHandler(500, message)
     }
 }
