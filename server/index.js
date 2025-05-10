@@ -20,7 +20,6 @@ app.use('/api', router)
 //обработчик ошибок регестрируем последним
 app.use(errorHandlerMiddleware)
 
-
 const start = async () => {
     try {
         await sequelize.authenticate()
@@ -32,7 +31,3 @@ const start = async () => {
 }
 
 start()
-
-
-
-

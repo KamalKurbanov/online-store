@@ -1,18 +1,10 @@
 {
-  // Активирует ESLint для всех поддерживаемых файлов
-  "eslint.enable": true,
-  
-  // Автоматически исправляет ошибки при сохранении (если возможно)
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": true // Исправляет ошибки ESLint
   },
-  
-  // Отключает встроенную проверку JS/TS, чтобы избежать конфликтов
-  "javascript.validate.enable": false,
-  "typescript.validate.enable": false,
-  
-  // Если используете Prettier + ESLint:
-  "prettier.enable": false, // Отключает автоформатирование через Prettier
-  "editor.formatOnSave": false, // Форматирование будет через ESLint
-  "eslint.format.enable": true // Разрешает ESLint управлять форматированием
+  "editor.formatOnSave": true, // Включаем форматирование при сохранении
+  "editor.defaultFormatter": "esbenp.prettier-vscode", // Prettier как основной форматтер
+  "prettier.singleQuote": true, // Одинарные кавычки
+  "prettier.semi": false, // Без точек с запятой
+  "eslint.format.enable": false // Отключаем форматирование через ESLint
 }
