@@ -1,11 +1,11 @@
 const brandControllers = require('./brand')
-const producControllers = require('./product')
+const productControllers = require('./product')
 const userControllers = require('./user')
-const cotygoriesControllers = require('./cotygories')
+const categoriesControllers = require('./categories')
 
 module.exports = {
     brandControllers,
-    producControllers,
+    productControllers,
     userControllers,
-    cotygoriesControllers,
+    categoriesControllers,
 }

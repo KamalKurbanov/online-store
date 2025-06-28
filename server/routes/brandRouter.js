@@ -1,10 +1,18 @@
 const Router = require('express')
 const router = new Router()
 const brandControllers = require('../controllers').brandControllers
+const authMiddleware = require('../middleware/authMiddleware')
+const roles = require('../constants/roles')
 
-
-router.get('/', brandControllers.getAll)
-router.post('/', brandControllers.create)
-
+router.get(
+    '/',
+    authMiddleware([...Object.values(roles)]),
+    brandControllers.getAll
+)
+router.post(
+    '/',
+    authMiddleware([...Object.values(roles)]),
+    brandControllers.create
+)
 
 module.exports = router

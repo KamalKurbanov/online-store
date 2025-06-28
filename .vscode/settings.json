@@ -6,5 +6,6 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode", // Prettier как основной форматтер
   "prettier.singleQuote": true, // Одинарные кавычки
   "prettier.semi": false, // Без точек с запятой
-  "eslint.format.enable": false // Отключаем форматирование через ESLint
+  "eslint.format.enable": false,
+  "cSpell.words": ["удален", "успешно"] // Отключаем форматирование через ESLint
 }

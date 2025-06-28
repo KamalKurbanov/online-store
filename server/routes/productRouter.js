@@ -1,12 +1,24 @@
 const Router = require('express')
 const router = new Router()
-const {producControllers} = require('../controllers')
+const { productControllers } = require('../controllers')
 
+const authMiddleware = require('../middleware/authMiddleware')
+const roles = require('../constants/roles')
 
-
-router.get('/', producControllers.getAll)
-router.get('/:id', producControllers.getOne)
-router.post('/', producControllers.create)
-
+router.get(
+    '/',
+    authMiddleware([Object.values(roles)]),
+    productControllers.getAll
+)
+router.get(
+    '/:id',
+    authMiddleware([Object.values(roles)]),
+    productControllers.getOne
+)
+router.post(
+    '/',
+    authMiddleware([Object.values(roles)]),
+    productControllers.create
+)
 
 module.exports = router
