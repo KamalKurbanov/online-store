@@ -1,9 +1,14 @@
 const express = require('express')
 const cors = require('cors')
+const fs = require('fs')
+const path = require('path')
 const fileUpload = require('express-fileupload')
+const swaggerUi = require('swagger-ui-express');
 const router = require('./routes')
 const errorHandlerMiddleware = require('./middleware/errorHandlingMiddleware')
-const path = require('path')
+const swaggerOptions  = require('./contracts/swaggerOptions').swaggerOptions
+
+const outputPath = path.join(__dirname, '../contracts/openapi.json');
 
 const PORT = process.env.PORT || 5000
 
@@ -16,7 +21,10 @@ app.use(express.json())
 app.use(express.static(path.resolve(__dirname, 'static')))
 app.use(fileUpload({}))
 
-app.use('/api', router)
+fs.writeFileSync(outputPath, JSON.stringify(swaggerOptions, null, 2), 'utf8');
+
+app.use('/api/v1', router)
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerOptions));
 //обработчик ошибок регестрируем последним
 app.use(errorHandlerMiddleware)
 

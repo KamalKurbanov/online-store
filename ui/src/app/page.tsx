@@ -6,15 +6,8 @@ type Props = {
   token: string
 }
 
-// export async function getServerSideProps(): GetServerSideProps<Props> {
-
-//   return {
-//     props: token,
-//   }
-// }
-
 export default async function Page({ token }: Props) {
-  const data = await fetch('http://localhost:3001/api/user/login', {
+  const data = await fetch('http://localhost:3001/api/v1/user/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
