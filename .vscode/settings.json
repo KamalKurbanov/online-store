@@ -1,10 +1,11 @@
 {
-    "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "eslint.enable": true,
-  "eslint.run": "onSave",
-  "eslint.options": {
-    "extensions": [".js"]
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
   },
-  "prettier.requireConfig": true  
+  "editor.formatOnSave": true, // Включаем форматирование при сохранении
+  "editor.defaultFormatter": "esbenp.prettier-vscode", // Prettier как основной форматтер
+  "prettier.singleQuote": true, // Одинарные кавычки
+  "prettier.semi": false, // Без точек с запятой
+  "eslint.format.enable": false,
+  "cSpell.words": ["удален", "успешно"] // Отключаем форматирование через ESLint
 }
